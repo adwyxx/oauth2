@@ -2,7 +2,7 @@ package com.adwyxx.oauth.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
  * @Description: Redis 操作类
@@ -12,12 +12,13 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 public class RedisHelper {
 
     // Redis库操作template
+    // 注意：RedisTemplate<K,V>泛型类的实例K、V的数据类型必须一致。如RedisTemplate<Object,Object>，RedisTemplate<String,String>，而不能是RedisTemplate<String,Object>
     @Autowired
-    private static RedisTemplate<String,Object> redisTemplate;
+    private static RedisTemplate<Object,Object> redisTemplate;
 
     // String类型的key序列化器
     @Autowired
-    public static RedisSerializer<String> stringKeySerializer;
+    public static StringRedisSerializer stringKeySerializer;
 
     /**
     * @description : 获取RedisTemplate实例
@@ -25,8 +26,9 @@ public class RedisHelper {
     * @date : 2018/11/29 14:56
     * @return : RedisTemplate实例
     **/
-    public static RedisTemplate<String,Object> getTemplate()
+    public static RedisTemplate<Object,Object> getTemplate()
     {
+        //Redis的Key值默认是序列化成二进制的，为了查看方便将key的序列化方式改变为String
         if(redisTemplate.getKeySerializer().getClass().equals(redisTemplate.getDefaultSerializer().getClass()))
         {
             redisTemplate.setKeySerializer(stringKeySerializer);
@@ -42,9 +44,9 @@ public class RedisHelper {
     * @author : Leo.W
     * @date : 2018/11/29 14:57
     **/
-    public static void setValue(String key,Object value)
+    public static void setValue(Object key,Object value)
     {
-        getTemplate().boundValueOps(key).set(value);
+        getTemplate().opsForValue().set(key,value);
     }
 
     /**
@@ -54,9 +56,9 @@ public class RedisHelper {
     * @date : 2018/11/29 14:58
     * @return : Value
     **/
-    public static Object getValue(String key)
+    public static Object getValue(Object key)
     {
-       return getTemplate().boundValueOps(key).get();
+       return getTemplate().opsForValue().get(key);
     }
 
     /**
@@ -65,7 +67,7 @@ public class RedisHelper {
     * @author : Leo.W
     * @date : 2018/11/29 14:59
     **/
-    public  static void delete(String key)
+    public  static void delete(Object key)
     {
         getTemplate().delete(key);
     }
