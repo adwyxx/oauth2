@@ -1,20 +1,19 @@
 package com.adwyxx.oauth.mapper;
 
 import com.adwyxx.oauth.model.AccessToken;
-import com.adwyxx.oauth.model.AccessTokenWithBLOBs;
 
 public interface AccessTokenMapper {
-    int deleteByPrimaryKey(Long id);
+    int deleteById(Long id);
 
-    int insert(AccessTokenWithBLOBs record);
+    int deleteByToken(String token);
 
-    int insertSelective(AccessTokenWithBLOBs record);
+    int insert(AccessToken record);
 
-    AccessTokenWithBLOBs selectByPrimaryKey(Long id);
+    AccessToken selectById(Long id);
 
-    int updateByPrimaryKeySelective(AccessTokenWithBLOBs record);
+    AccessToken selectByToken(String token);
 
-    int updateByPrimaryKeyWithBLOBs(AccessTokenWithBLOBs record);
+    int updateById(AccessToken record);
 
-    int updateByPrimaryKey(AccessToken record);
+    int updateRefreshToken(AccessToken record);
 }

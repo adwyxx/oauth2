@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.adwyxx.oauth.mapper.AuthorizationClientMapper">
-  <resultMap id="BaseResultMap" type="com.adwyxx.oauth.model.AuthorizationClient">
+<mapper namespace="com.adwyxx.oauth.mapper.OAuthClientMapper">
+  <resultMap id="BaseResultMap" type="com.adwyxx.oauth.model.OAuthClient">
     <id column="client_id" jdbcType="VARCHAR" property="clientId" />
     <result column="client_name" jdbcType="VARCHAR" property="clientName" />
+    <result column="client_secret" jdbcType="VARCHAR" property="clientSecret" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
@@ -19,13 +20,13 @@
     delete from authorization_client
     where client_id = #{clientId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.adwyxx.oauth.model.AuthorizationClient">
+  <insert id="insert" parameterType="com.adwyxx.oauth.model.OAuthClient">
     insert into authorization_client (client_id, client_name, create_time
       )
     values (#{clientId,jdbcType=VARCHAR}, #{clientName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.adwyxx.oauth.model.AuthorizationClient">
+  <insert id="insertSelective" parameterType="com.adwyxx.oauth.model.OAuthClient">
     insert into authorization_client
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="clientId != null">
@@ -50,7 +51,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.adwyxx.oauth.model.AuthorizationClient">
+  <update id="updateByPrimaryKeySelective" parameterType="com.adwyxx.oauth.model.OAuthClient">
     update authorization_client
     <set>
       <if test="clientName != null">
@@ -62,7 +63,7 @@
     </set>
     where client_id = #{clientId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.adwyxx.oauth.model.AuthorizationClient">
+  <update id="updateByPrimaryKey" parameterType="com.adwyxx.oauth.model.OAuthClient">
     update authorization_client
     set client_name = #{clientName,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}

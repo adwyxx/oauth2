@@ -3,147 +3,48 @@
 <mapper namespace="com.adwyxx.oauth.mapper.AccessTokenMapper">
   <resultMap id="BaseResultMap" type="com.adwyxx.oauth.model.AccessToken">
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="response_type" jdbcType="VARCHAR" property="responseType" />
+    <result column="refresh_token" jdbcType="VARCHAR" property="refreshToken" />
     <result column="exprises" jdbcType="BIGINT" property="exprises" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.adwyxx.oauth.model.AccessTokenWithBLOBs">
-    <result column="token" jdbcType="LONGVARBINARY" property="token" />
-    <result column="refresh_token" jdbcType="LONGVARBINARY" property="refreshToken" />
-  </resultMap>
   <sql id="Base_Column_List">
-    id, exprises, create_time
+    id, token, response_type, exprises, refresh_token, create_time
   </sql>
-  <sql id="Blob_Column_List">
-    token, refresh_token
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+  <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from access_token
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+  <select id="selectByToken" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from access_token
+    where token = #{token,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByToken" parameterType="java.lang.String">
     delete from access_token
-    where id = #{id,jdbcType=BIGINT}
+    where token = #{token,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.adwyxx.oauth.model.AccessTokenWithBLOBs">
-    insert into access_token (id, exprises, create_time, 
-      token, refresh_token)
-    values (#{id,jdbcType=BIGINT}, #{exprises,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{token,jdbcType=LONGVARBINARY}, #{refreshToken,jdbcType=LONGVARBINARY})
-  </insert>
-  <insert id="insertSelective" parameterType="com.adwyxx.oauth.model.AccessTokenWithBLOBs">
-    insert into access_token
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="exprises != null">
-        exprises,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="token != null">
-        token,
-      </if>
-      <if test="refreshToken != null">
-        refresh_token,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="exprises != null">
-        #{exprises,jdbcType=BIGINT},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="token != null">
-        #{token,jdbcType=LONGVARBINARY},
-      </if>
-      <if test="refreshToken != null">
-        #{refreshToken,jdbcType=LONGVARBINARY},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.adwyxx.oauth.model.AccessTokenWithBLOBs">
-    update access_token
-    <set>
-      <if test="exprises != null">
-        exprises = #{exprises,jdbcType=BIGINT},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="token != null">
-        token = #{token,jdbcType=LONGVARBINARY},
-      </if>
-      <if test="refreshToken != null">
-        refresh_token = #{refreshToken,jdbcType=LONGVARBINARY},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.adwyxx.oauth.model.AccessTokenWithBLOBs">
-    update access_token
-    set exprises = #{exprises,jdbcType=BIGINT},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      token = #{token,jdbcType=LONGVARBINARY},
-      refresh_token = #{refreshToken,jdbcType=LONGVARBINARY}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.adwyxx.oauth.model.AccessToken">
-    update access_token
-    set exprises = #{exprises,jdbcType=BIGINT},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <resultMap id="BaseResultMap" type="com.adwyxx.oauth.model.AccessToken">
-    <result column="token" jdbcType="VARCHAR" property="token" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="expiries" jdbcType="INTEGER" property="expiries" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-  </resultMap>
   <insert id="insert" parameterType="com.adwyxx.oauth.model.AccessToken">
-    insert into access_token (token, user_id, expiries, 
-      create_time)
-    values (#{token,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{expiries,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP})
+    insert into access_token (id, exprises, create_time, token, refresh_token, response_type)
+    values (#{id,jdbcType=BIGINT}, #{exprises,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{token,jdbcType=VARCHAR}, #{refreshToken,jdbcType=VARCHAR}, #{responseType,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.adwyxx.oauth.model.AccessToken">
-    insert into access_token
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="token != null">
-        token,
-      </if>
-      <if test="userId != null">
-        user_id,
-      </if>
-      <if test="expiries != null">
-        expiries,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="token != null">
-        #{token,jdbcType=VARCHAR},
-      </if>
-      <if test="userId != null">
-        #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="expiries != null">
-        #{expiries,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
+  <update id="updateById" parameterType="com.adwyxx.oauth.model.AccessToken">
+    update access_token
+    set token = #{token,jdbcType=INTEGER},
+      refresh_token = #{refreshToken,jdbcType=VARCHAR},
+      exprises = #{exprises,jdbcType=BIGINT},
+      response_type = #{responseType,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateRefreshToken" parameterType="com.adwyxx.oauth.model.AccessToken">
+    update access_token
+    set refresh_token = #{refreshToken,jdbcType=VARCHAR}
+    where token = #{token,jdbcType=VARCHAR}
+  </update>
 </mapper>

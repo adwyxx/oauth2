@@ -1,13 +1,26 @@
 package com.adwyxx.oauth.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class AuthorizationClient {
+public class OAuthClient implements Serializable {
+    private static final long serialVersionUID = -8951188975058596418L;
+
     private String clientId;
 
     private String clientName;
 
+    private String clientSecret;
+
     private Date createTime;
+
+    public String getClientSecret() {
+        return clientSecret;
+    }
+
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
 
     public String getClientId() {
         return clientId;
