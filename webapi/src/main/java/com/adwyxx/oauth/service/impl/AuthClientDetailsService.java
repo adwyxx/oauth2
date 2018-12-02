@@ -1,6 +1,7 @@
 package com.adwyxx.oauth.service.impl;
 
 import com.adwyxx.oauth.mapper.OAuthClientMapper;
+import com.adwyxx.oauth.model.AuthClientDetails;
 import com.adwyxx.oauth.model.OAuthClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -22,6 +23,11 @@ public class AuthClientDetailsService implements ClientDetailsService {
     @Override
     public ClientDetails loadClientByClientId(String s) throws ClientRegistrationException {
         OAuthClient client = mapper.selectByPrimaryKey(s);
-        return null;
+        if(null==client)
+        {
+            throw new ClientRegistrationException("未授权的ClientID："+s);
+        }
+        AuthClientDetails details = new AuthClientDetails(client.getClientId(),client.getClientSecret());
+        return details;
     }
 }

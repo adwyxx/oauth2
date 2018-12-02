@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCache;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.core.userdetails.UserCache;
@@ -12,7 +13,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 /**
- * @Description: Redis数据缓存配置文件
+ * @Description: OAuth认证数据存储方式配置：token，user，client_details等信息存储方式
  * @Auther: Leo.W
  * @Date: 2018/11/29 15:11
  */
@@ -23,6 +24,14 @@ public class DataStoreConfig {
     public static final String REDIS_PREFIX ="OAUTH_SERVER_REDIS_CACHE_PREFIX";//不为null即可
     public static final Long EXPIRE =60*60L;//缓存有效时间
 
+
+//    @Bean
+//    public RedisCache redisCache()
+//    {
+//
+//        return new RedisCache();
+//    }
+
     /**
     * @description : 用户信息缓存
     * @param cache : Redis Cache
@@ -30,11 +39,12 @@ public class DataStoreConfig {
     * @date : 2018/11/29 18:01
     * @return :
     **/
-    @Bean
-    public UserCache userCache(RedisCache cache) throws Exception
-    {
-        return new SpringCacheBasedUserCache(cache);
-    }
+//    @Bean
+//    public UserCache userCache(RedisCache cache) throws Exception
+//    {
+//        return new SpringCacheBasedUserCache(cache);
+//    }
+
 
     /**
     * @description : 配置AccessToken的存储方式：RedisTokenStore存储

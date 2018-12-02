@@ -3,7 +3,6 @@ package com.adwyxx.oauth.service.impl;
 import com.adwyxx.oauth.mapper.UserMapper;
 import com.adwyxx.oauth.model.User;
 import com.adwyxx.oauth.service.UserService;
-import com.adwyxx.oauth.utils.RedisHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -3,9 +3,7 @@ package com.adwyxx.oauth.model;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Description: OAuth2认证客户端信息
@@ -16,6 +14,34 @@ public class AuthClientDetails implements ClientDetails {
 
     private String clientId;
     private String clientSecret;
+    private Set<String> authorizedGrantTypes;
+
+    public AuthClientDetails (String clientId,String clientSecret)
+    {
+        this.clientId=clientId;
+        this.clientSecret= clientSecret;
+        HashSet<String> types=new HashSet<String>();
+        types.add("password");
+        this.authorizedGrantTypes = types;
+    }
+
+    public AuthClientDetails setClientId(String clientId)
+    {
+        this.clientId=clientId;
+        return  this;
+    }
+
+    public AuthClientDetails setClientSecret(String clientSecret)
+    {
+        this.clientSecret=clientSecret;
+        return  this;
+    }
+
+    public AuthClientDetails setAuthorizedGrantTypes(Set<String> types)
+    {
+        this.authorizedGrantTypes=types;
+        return this;
+    }
 
     @Override
     public String getClientId() {
@@ -49,7 +75,7 @@ public class AuthClientDetails implements ClientDetails {
 
     @Override
     public Set<String> getAuthorizedGrantTypes() {
-        return null;
+        return this.authorizedGrantTypes;
     }
 
     @Override

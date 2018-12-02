@@ -59,9 +59,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception
     {
-        //endpoints.setClientDetailsService(clientDetailsService);
+        //设置客户端信息Service
+        endpoints.setClientDetailsService(clientDetailsService);
+
         endpoints.authenticationManager(authenticationManager)
                 .tokenStore(tokenStore)
+                //.authorizationCodeServices()
                 .userDetailsService(userDetailsService);
     }
 
@@ -75,6 +78,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security.allowFormAuthenticationForClients();//允许客户表单认证
         security.passwordEncoder(new BCryptPasswordEncoder());//设置oauth_client_details中的密码编码器
+        security.tokenKeyAccess("permitAll()"); // 配置token获取和验证时的策略
         security.checkTokenAccess("permitAll()");//对于CheckEndpoint控制器[框架自带的校验]的/oauth/check端点允许所有客户端发送器请求而不会被Spring-security拦截
     }
 
