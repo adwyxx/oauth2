@@ -1,6 +1,5 @@
 package com.adwyxx.oauth.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCache;
@@ -23,17 +22,6 @@ public class DataStoreConfig {
     public static final String REDIS_CACHE_NAME = "OAUTH_SERVER_REDIS_CACHE";
     public static final String REDIS_PREFIX ="OAUTH_SERVER_REDIS_CACHE_PREFIX";//不为null即可
     public static final Long EXPIRE =60*60L;//缓存有效时间
-
-    @Autowired
-    RedisCacheWriter redisCacheWriter;
-
-    // 存储数据的缓存
-    @Bean
-    public RedisCache redisCache()
-    {
-        //RedisCache cache = new RedisCache(REDIS_CACHE_NAME, redisCacheWriter, RedisCacheConfiguration.defaultCacheConfig());
-        return  null;
-    }
 
     /**
     * @description : 用户信息缓存

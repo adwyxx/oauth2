@@ -3,19 +3,15 @@
 <mapper namespace="com.adwyxx.oauth.mapper.UserMapper">
   <resultMap id="BaseResultMap" type="com.adwyxx.oauth.model.User">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="logon_name" jdbcType="VARCHAR" property="logonName" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="display_name" jdbcType="VARCHAR" property="displayName" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="mobile" jdbcType="VARCHAR" property="mobile" />
-    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
-    <result column="last_logoff_time" jdbcType="TIMESTAMP" property="lastLogoffTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="creator" jdbcType="VARCHAR" property="creator" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, logon_name, display_name, password, email, mobile, last_login_time, last_logoff_time, 
-    create_time, creator
+    id, user_name, display_name, password, email, mobile, create_time
   </sql>
   <select id="getUserById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -23,19 +19,22 @@
     from users
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="getUserByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from users
+    where user_name = #{username,jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteUserById" parameterType="java.lang.Integer">
     delete from users
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.adwyxx.oauth.model.User">
-    insert into users (id, logon_name, display_name, 
-      password, email, mobile, 
-      last_login_time, last_logoff_time, create_time, 
-      creator)
-    values (#{id,jdbcType=INTEGER}, #{logonName,jdbcType=VARCHAR}, #{displayName,jdbcType=VARCHAR}, 
+    insert into users (id, user_name, display_name, password, email, mobile create_time)
+    values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{displayName,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
-      #{lastLoginTime,jdbcType=TIMESTAMP}, #{lastLogoffTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{creator,jdbcType=VARCHAR})
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.adwyxx.oauth.model.User">
     insert into users
@@ -43,8 +42,8 @@
       <if test="id != null">
         id,
       </if>
-      <if test="logonName != null">
-        logon_name,
+      <if test="userName != null">
+        user_name,
       </if>
       <if test="displayName != null">
         display_name,
@@ -58,25 +57,16 @@
       <if test="mobile != null">
         mobile,
       </if>
-      <if test="lastLoginTime != null">
-        last_login_time,
-      </if>
-      <if test="lastLogoffTime != null">
-        last_logoff_time,
-      </if>
       <if test="createTime != null">
         create_time,
-      </if>
-      <if test="creator != null">
-        creator,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="logonName != null">
-        #{logonName,jdbcType=VARCHAR},
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
       </if>
       <if test="displayName != null">
         #{displayName,jdbcType=VARCHAR},
@@ -90,25 +80,16 @@
       <if test="mobile != null">
         #{mobile,jdbcType=VARCHAR},
       </if>
-      <if test="lastLoginTime != null">
-        #{lastLoginTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="lastLogoffTime != null">
-        #{lastLogoffTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="creator != null">
-        #{creator,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.adwyxx.oauth.model.User">
     update users
     <set>
-      <if test="logonName != null">
-        logon_name = #{logonName,jdbcType=VARCHAR},
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
       </if>
       <if test="displayName != null">
         display_name = #{displayName,jdbcType=VARCHAR},
@@ -122,32 +103,20 @@
       <if test="mobile != null">
         mobile = #{mobile,jdbcType=VARCHAR},
       </if>
-      <if test="lastLoginTime != null">
-        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="lastLogoffTime != null">
-        last_logoff_time = #{lastLogoffTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="creator != null">
-        creator = #{creator,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.adwyxx.oauth.model.User">
     update users
-    set logon_name = #{logonName,jdbcType=VARCHAR},
+    set user_name = #{userName,jdbcType=VARCHAR},
       display_name = #{displayName,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       mobile = #{mobile,jdbcType=VARCHAR},
-      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
-      last_logoff_time = #{lastLogoffTime,jdbcType=TIMESTAMP},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      creator = #{creator,jdbcType=VARCHAR}
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

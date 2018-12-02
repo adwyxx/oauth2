@@ -1,5 +1,6 @@
 package com.adwyxx.oauth.config;
 
+import com.adwyxx.oauth.service.impl.AuthClientDetailsService;
 import com.adwyxx.oauth.service.impl.AuthUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -7,10 +8,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-
 import javax.sql.DataSource;
 
 /**
@@ -19,9 +20,11 @@ import javax.sql.DataSource;
  * @Date: 2018/11/29 18:02
  */
 @Configuration
-public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
+@EnableAuthorizationServer//开启配置 OAuth 2.0 认证授权服务
+public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+
     @Autowired
-    DataSource dataSource;
+    private DataSource dataSource;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -31,6 +34,9 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
     private AuthUserDetailsService userDetailsService;
+
+    @Autowired
+    private AuthClientDetailsService clientDetailsService;
 
     /**
      * 配置 oauth_client_details【client_id和client_secret等】信息的认证【检查ClientDetails的合法性】服务
@@ -51,9 +57,12 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
      *
      */
     @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints)
-            throws Exception {
-        endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore).userDetailsService(userDetailsService);
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception
+    {
+        //endpoints.setClientDetailsService(clientDetailsService);
+        endpoints.authenticationManager(authenticationManager)
+                .tokenStore(tokenStore)
+                .userDetailsService(userDetailsService);
     }
 
     /**

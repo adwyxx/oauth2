@@ -3,6 +3,7 @@ package com.adwyxx.oauth.mapper;
 import com.adwyxx.oauth.model.User;
 
 public interface UserMapper {
+
     int insert(User record);
 
     int insertSelective(User record);
@@ -10,4 +11,6 @@ public interface UserMapper {
     User getUserById(Integer id);
 
     int deleteUserById(Integer id);
+
+    User getUserByName(String username);
 }
