@@ -11,7 +11,7 @@
  Target Server Version : 80013
  File Encoding         : 65001
 
- Date: 02/12/2018 17:26:51
+ Date: 03/12/2018 17:39:48
 */
 
 SET NAMES utf8mb4;
@@ -30,7 +30,7 @@ CREATE TABLE `access_token`  (
   `response_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `create_time` datetime(0) NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for authorization_code
@@ -59,8 +59,8 @@ CREATE TABLE `oauth_client`  (
 -- ----------------------------
 -- Records of oauth_client
 -- ----------------------------
-INSERT INTO `oauth_client` VALUES ('adwyxx_cms', 'CMS System', '2018-11-29 09:26:00', NULL);
-INSERT INTO `oauth_client` VALUES ('auth_server', 'Authorization Server', '2018-11-29 09:26:37', NULL);
+INSERT INTO `oauth_client` VALUES ('adwyxx_cms', 'CMS System', '2018-11-29 09:26:00', '$2a$10$XfOOmGOgQB1XQux4ufvJ9uHxknvGsaCU7ct3nEiyxB/rfwgvnU8n6');
+INSERT INTO `oauth_client` VALUES ('auth_server', 'Authorization Server', '2018-11-29 09:26:37', 'auth_server');
 
 -- ----------------------------
 -- Table structure for users
@@ -75,13 +75,13 @@ CREATE TABLE `users`  (
   `mobile` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `create_time` datetime(0) NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES (1, 'admin', 'admin', 'admin', NULL, NULL, '2018-11-29 09:24:20');
-INSERT INTO `users` VALUES (2, 'zhangsan', '123', '张三', NULL, NULL, '2018-11-29 09:24:57');
-INSERT INTO `users` VALUES (3, 'lisi', '123', '李四', NULL, NULL, '2018-11-29 09:25:17');
+INSERT INTO `users` VALUES (1, 'admin', '$2a$10$HiJosK1Pu3Ksc/tsiI598eBTMdBy9L65tIFFMVLJSLpsszpbEoxB6', 'admin', NULL, NULL, '2018-11-29 09:24:20');
+INSERT INTO `users` VALUES (2, 'zhangsan', '$2a$10$HiJosK1Pu3Ksc/tsiI598eBTMdBy9L65tIFFMVLJSLpsszpbEoxB6', '张三', NULL, NULL, '2018-11-29 09:24:57');
+INSERT INTO `users` VALUES (3, 'lisi', '$2a$10$HiJosK1Pu3Ksc/tsiI598eBTMdBy9L65tIFFMVLJSLpsszpbEoxB6', '李四', NULL, NULL, '2018-11-29 09:25:17');
 
 SET FOREIGN_KEY_CHECKS = 1;
