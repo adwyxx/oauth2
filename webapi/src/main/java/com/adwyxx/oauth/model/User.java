@@ -76,6 +76,9 @@ public class User implements Serializable {
         this.createTime = createTime;
     }
 
+    public User()
+    {}
+
     public User(User user)
     {
         super();

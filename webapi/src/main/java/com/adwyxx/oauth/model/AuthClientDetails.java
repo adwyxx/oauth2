@@ -20,8 +20,12 @@ public class AuthClientDetails implements ClientDetails {
     {
         this.clientId=clientId;
         this.clientSecret= clientSecret;
+        //设置客户端生成token的类型
         HashSet<String> types=new HashSet<String>();
-        types.add("password");
+        types.add("password"); //用户密码类型
+        types.add("authorization_code");//授权码类型
+        types.add("refresh_token"); //刷新token
+        types.add("client_credentials");//客户端凭据（客户端ID以及Key）类型
         this.authorizedGrantTypes = types;
     }
 
@@ -43,21 +47,25 @@ public class AuthClientDetails implements ClientDetails {
         return this;
     }
 
+    //获取客户端id
     @Override
     public String getClientId() {
         return this.clientId;
     }
 
+    //获取需要授权认证的资源
     @Override
     public Set<String> getResourceIds() {
         return null;
     }
 
+    //是否需要Secret
     @Override
     public boolean isSecretRequired() {
         return false;
     }
 
+    //获取客户端密码
     @Override
     public String getClientSecret() {
         return this.clientSecret;
@@ -68,31 +76,42 @@ public class AuthClientDetails implements ClientDetails {
         return false;
     }
 
+    //获取授权范围
     @Override
     public Set<String> getScope() {
-        return null;
+        HashSet<String> scopes = new HashSet<String>();
+        scopes.add("read");
+        scopes.add("write");
+        return scopes;
     }
 
+    //获取认证模式
     @Override
     public Set<String> getAuthorizedGrantTypes() {
         return this.authorizedGrantTypes;
     }
 
+    //获取认证后跳转的rul地址
     @Override
     public Set<String> getRegisteredRedirectUri() {
         return null;
     }
 
+    //返回客户端权限列表，不能为null
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
-        return null;
+        ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        authorities.add(new OauthAuthority("oauth2"));
+        return authorities;
     }
 
+    //获取token的有效期（秒）
     @Override
     public Integer getAccessTokenValiditySeconds() {
         return 60*60;
     }
 
+    //获取刷新token的有效期（秒）
     @Override
     public Integer getRefreshTokenValiditySeconds() {
         return 60*60;

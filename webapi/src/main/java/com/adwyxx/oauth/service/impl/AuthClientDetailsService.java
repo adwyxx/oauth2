@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.stereotype.Service;
 
 /**
- * @Description:
+ * @Description: ClientDetailsService实现类
  * @Auther: Leo.W
  * @Date: 2018/11/30 14:20
  */
@@ -20,8 +20,10 @@ public class AuthClientDetailsService implements ClientDetailsService {
     @Autowired
     OAuthClientMapper mapper;
 
+    //重写根据client id获取client details信息方法
     @Override
     public ClientDetails loadClientByClientId(String s) throws ClientRegistrationException {
+        //从数据库读取client details
         OAuthClient client = mapper.selectByPrimaryKey(s);
         if(null==client)
         {

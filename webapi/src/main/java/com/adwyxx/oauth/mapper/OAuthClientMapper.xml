@@ -8,54 +8,32 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    client_id, client_name, create_time
+    client_id, client_name, client_secret, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from authorization_client
+    from oauth_client
     where client_id = #{clientId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from authorization_client
+    delete from oauth_client
     where client_id = #{clientId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.adwyxx.oauth.model.OAuthClient">
-    insert into authorization_client (client_id, client_name, create_time
+    insert into oauth_client (client_id, client_name, client_secret, create_time
       )
-    values (#{clientId,jdbcType=VARCHAR}, #{clientName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+    values (#{clientId,jdbcType=VARCHAR}, #{clientName,jdbcType=VARCHAR}, #{clientSecret,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
       )
-  </insert>
-  <insert id="insertSelective" parameterType="com.adwyxx.oauth.model.OAuthClient">
-    insert into authorization_client
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="clientId != null">
-        client_id,
-      </if>
-      <if test="clientName != null">
-        client_name,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="clientId != null">
-        #{clientId,jdbcType=VARCHAR},
-      </if>
-      <if test="clientName != null">
-        #{clientName,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.adwyxx.oauth.model.OAuthClient">
-    update authorization_client
+    update oauth_client
     <set>
       <if test="clientName != null">
         client_name = #{clientName,jdbcType=VARCHAR},
+      </if>
+      <if test="clientSecret != null">
+        client_secret = #{clientSecret,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -64,8 +42,9 @@
     where client_id = #{clientId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.adwyxx.oauth.model.OAuthClient">
-    update authorization_client
+    update oauth_client
     set client_name = #{clientName,jdbcType=VARCHAR},
+      client_secret = #{clientSecret,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where client_id = #{clientId,jdbcType=VARCHAR}
   </update>

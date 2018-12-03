@@ -14,6 +14,7 @@ import java.util.Collection;
 public final class AuthUserDetails extends User implements UserDetails {
     private static final long serialVersionUID = 5563440845470929098L;
 
+    //重写获取用户权限方法
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<OauthAuthority>  authorites = new ArrayList<OauthAuthority>();
@@ -21,31 +22,37 @@ public final class AuthUserDetails extends User implements UserDetails {
         return  authorites;
     }
 
+    //重写获取用户密码方法
     @Override
     public String getPassword() {
         return super.getPassword();
     }
 
+    //重写返回用户名方法
     @Override
     public String getUsername() {
         return super.getUserName();
     }
 
+    //验证用户账号是否未过期
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    //验证用户账号是否未被锁定
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    //验证用户证书是否未过期
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    //用户是否可用
     @Override
     public boolean isEnabled() {
         return true;
