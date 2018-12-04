@@ -91,10 +91,12 @@ public class AuthClientDetails implements ClientDetails {
         return this.authorizedGrantTypes;
     }
 
-    //获取认证后跳转的rul地址
+    //获取认证后跳转的rul地址,必须有地址，否则/oauth/authorize请求authorization code时报错
     @Override
     public Set<String> getRegisteredRedirectUri() {
-        return null;
+        HashSet<String> uri = new HashSet<String>();
+        uri.add("http://www.baidu.com");
+        return uri;
     }
 
     //返回客户端权限列表，不能为null
