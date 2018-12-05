@@ -20,7 +20,7 @@ public class AuthClientDetails implements ClientDetails {
     {
         this.clientId=clientId;
         this.clientSecret= clientSecret;
-        //设置客户端生成token的类型
+        // 设置客户端生成token的类型
         HashSet<String> types=new HashSet<String>();
         types.add("password"); //用户密码类型
         types.add("authorization_code");//授权码类型
@@ -47,36 +47,37 @@ public class AuthClientDetails implements ClientDetails {
         return this;
     }
 
-    //获取客户端id
+    // 获取客户端id
     @Override
     public String getClientId() {
         return this.clientId;
     }
 
-    //获取需要授权认证的资源
+    // 获取需要授权认证的资源
     @Override
     public Set<String> getResourceIds() {
         return null;
     }
 
-    //是否需要Secret
+    // 是否需要Secret，貌似没起作用，无论true或false都会进行密码验证
     @Override
     public boolean isSecretRequired() {
         return false;
     }
 
-    //获取客户端密码
+    // 获取客户端密码
     @Override
     public String getClientSecret() {
         return this.clientSecret;
     }
 
+    //是否有授权范围
     @Override
     public boolean isScoped() {
         return false;
     }
 
-    //获取授权范围
+    // 获取授权范围，all,read,write
     @Override
     public Set<String> getScope() {
         HashSet<String> scopes = new HashSet<String>();
@@ -85,21 +86,22 @@ public class AuthClientDetails implements ClientDetails {
         return scopes;
     }
 
-    //获取认证模式
+    // 获取认证模式
     @Override
     public Set<String> getAuthorizedGrantTypes() {
         return this.authorizedGrantTypes;
     }
 
-    //获取认证后跳转的rul地址,必须有地址，否则/oauth/authorize请求authorization code时报错
+    // 获取认证后跳转的rul地址,/oauth/authorize请求authorization code时的redirect_url参数值必须是该列表中之一
+    // 或配置AuthorizationServerEndpointsConfigurer的redirectResolver，重写redirectResolver去掉跳转地址验证
     @Override
     public Set<String> getRegisteredRedirectUri() {
         HashSet<String> uri = new HashSet<String>();
-        uri.add("http://www.baidu.com");
+        //uri.add("http://www.baidu.com");
         return uri;
     }
 
-    //返回客户端权限列表，不能为null
+    // 返回客户端权限列表，不能为null
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
@@ -107,21 +109,24 @@ public class AuthClientDetails implements ClientDetails {
         return authorities;
     }
 
-    //获取token的有效期（秒）
+    // 获取token的有效期（秒）
     @Override
     public Integer getAccessTokenValiditySeconds() {
         return 60*60;
     }
 
-    //获取刷新token的有效期（秒）
+    // 获取刷新token的有效期（秒）
     @Override
     public Integer getRefreshTokenValiditySeconds() {
         return 60*60;
     }
 
+    // 设置是否自动验证通过，
+    // 返回值为true时，则在用户名和密码验证通过后直接返回授权码跳转会请求页面
+    // 返回false时， 则在用户名和密码验证通过后会跳转至去却页面，选择授权类型点击确认后才会返回授权码跳转至请求页面
     @Override
     public boolean isAutoApprove(String s) {
-        return false;
+        return true;
     }
 
     @Override

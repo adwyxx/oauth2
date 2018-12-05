@@ -2,6 +2,7 @@ package com.adwyxx.oauth.config;
 
 import com.adwyxx.oauth.handler.AuthenticationSuccessHandler;
 import com.adwyxx.oauth.service.impl.AuthUserDetailsService;
+import com.adwyxx.oauth.service.impl.OAuth2UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,23 +53,26 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
             .and()
             .authorizeRequests()
                 .antMatchers("/oauth/**","/login/**").authenticated() //设置需要权限认证的路径
-                .anyRequest().hasRole("USER") /*设置oauth/authorize路径访问权限：任何含有USER角色的用户*/
-            .and()
-            .formLogin() //form表单登陆方式页面设置
-                .permitAll(); //form表单登陆页面受保护;
-
-        /*http.authorizeRequests()*//* /oauth/authorize请求配置 *//*
-                .antMatchers("/login/**").permitAll() *//*//*login路径下所有请求都受保护*//*
+                .anyRequest().hasRole("USER") //设置oauth/authorize路径访问权限：任何含有USER角色的用户
+            //.and()
+            //.formLogin() //form表单登陆方式页面设置
+            //    .permitAll() //form表单登陆页面受保护
+            .and().oauth2Login()//oauth2登陆方式配置项
+                .successHandler(new AuthenticationSuccessHandler()) //支持前后端分离，验证成功后跳转配置
+                .loginPage("http://localhost:9090/#/login") //oauth2登陆页面
+                .userInfoEndpoint().userService(new OAuth2UserServiceImpl());
+       /* http.authorizeRequests() //oauth/authorize请求配置
+                .antMatchers("/login/**").permitAll() //login路径下所有请求都受保护
                 .anyRequest().authenticated() //所有请求只要验证通过就放行
-                .anyRequest().hasRole("USER") *//*设置oauth/authorize路径访问权限：任何含有USER角色的用户*//*
+                .anyRequest().hasRole("USER") //设置oauth/authorize路径访问权限：任何含有USER角色的用户
             .and()
             .formLogin() //form表单登陆方式页面设置
                 .permitAll() //form表单登陆页面受保护;
             .and()
             .oauth2Login()//oauth2登陆方式配置项
-                .successHandler(new AuthenticationSuccessHandler())*//*支持前后端分离，验证成功后跳转配置*//*
-                .loginPage("/login/oauthLogin") *//*oauth2登陆页面*//*
-                .userInfoEndpoint();*/
+                .successHandler(new AuthenticationSuccessHandler()) //支持前后端分离，验证成功后跳转配置
+                .loginPage("/login/oauthLogin") //oauth2登陆页面
+                .userInfoEndpoint().userService(userDetailsService);*/
     }
 
     // 配置密码加密方式
