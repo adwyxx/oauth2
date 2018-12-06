@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,6 +15,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 
 /**
  * @Description: WebSecurityConfigurer
@@ -43,16 +49,32 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(bCryptPasswordEncoder());
     }
 
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.addAllowedOrigin("*");
+//        configuration.addAllowedHeader("*");
+//        configuration.addAllowedMethod("*");
+//        configuration.setAllowCredentials(true);
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
+
+    //解决前后端分离跨域问题
+    @Bean
+    public DefautlCorsFilter defautlCorsFilter() throws Exception {
+        return new DefautlCorsFilter();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //不允许跨域
-        http.csrf().disable();
+
         //设置拦截的oauth资源
-        http.requestMatchers()
-            .antMatchers("/oauth/**","/login/**")
-            .and()
-            .authorizeRequests()
+        http.authorizeRequests()
                 .antMatchers("/oauth/**","/login/**").authenticated() //设置需要权限认证的路径
+                .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                 .anyRequest().hasRole("USER") //设置oauth/authorize路径访问权限：任何含有USER角色的用户
             //.and()
             //.formLogin() //form表单登陆方式页面设置
@@ -61,19 +83,14 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .successHandler(new AuthenticationSuccessHandler()) //支持前后端分离，验证成功后跳转配置
                 .loginPage("http://localhost:9090/#/login") //oauth2登陆页面
                 .userInfoEndpoint().userService(new OAuth2UserServiceImpl());
-       /* http.authorizeRequests() //oauth/authorize请求配置
-                .antMatchers("/login/**").permitAll() //login路径下所有请求都受保护
-                .anyRequest().authenticated() //所有请求只要验证通过就放行
-                .anyRequest().hasRole("USER") //设置oauth/authorize路径访问权限：任何含有USER角色的用户
+
+        http.addFilterBefore(defautlCorsFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        //允许跨域
+        http.cors()
             .and()
-            .formLogin() //form表单登陆方式页面设置
-                .permitAll() //form表单登陆页面受保护;
-            .and()
-            .oauth2Login()//oauth2登陆方式配置项
-                .successHandler(new AuthenticationSuccessHandler()) //支持前后端分离，验证成功后跳转配置
-                .loginPage("/login/oauthLogin") //oauth2登陆页面
-                .userInfoEndpoint().userService(userDetailsService);*/
-    }
+            .csrf().disable();
+}
 
     // 配置密码加密方式
     @Bean
