@@ -91,9 +91,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         endpoints.authenticationManager(authenticationManager)
                 .tokenStore(tokenStore)
                 .redirectResolver(new AuthRedirectResolver()) //授权码请求跳转地址验证
-                //.accessTokenConverter(accessTokenConverter)
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST) //支持GET\POS请求获取token
-                //.tokenServices(tokenService)
                 //.authorizationCodeServices(authorizationCodeService) //不设置的话默认内存存储authorizationCode
                 .userDetailsService(userDetailsService)
                 .reuseRefreshTokens(true); //开启刷新token模式

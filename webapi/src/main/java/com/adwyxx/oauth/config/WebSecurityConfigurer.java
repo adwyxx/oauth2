@@ -4,6 +4,7 @@ import com.adwyxx.oauth.handler.AuthenticationSuccessHandler;
 import com.adwyxx.oauth.service.impl.AuthUserDetailsService;
 import com.adwyxx.oauth.service.impl.OAuth2UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -30,6 +31,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
+
+    @Value(value = "${spring.security.oauth2.loginPage}")
+    private String loginPage;
 
     //配置UserDetailsService实例
     @Autowired
@@ -71,6 +75,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        System.out.print(this.loginPage);
         //设置拦截的oauth资源
         http.authorizeRequests()
                 .antMatchers("/oauth/**","/login/**").authenticated() //设置需要权限认证的路径
@@ -81,7 +86,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
             //    .permitAll() //form表单登陆页面受保护
             .and().oauth2Login()//oauth2登陆方式配置项
                 .successHandler(new AuthenticationSuccessHandler()) //支持前后端分离，验证成功后跳转配置
-                .loginPage("http://localhost:9090/#/login") //oauth2登陆页面
+                .loginPage(this.loginPage) //oauth2登陆页面
                 .userInfoEndpoint().userService(new OAuth2UserServiceImpl());
 
         http.addFilterBefore(defautlCorsFilter(), UsernamePasswordAuthenticationFilter.class);
