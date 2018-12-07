@@ -41,7 +41,7 @@ export default {
     login () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          AuhtService.login(this.formData.username,this.formData.password);
+          AuhtService.login(this.formData.username, this.formData.password)
         } else {
           console.log('error submit!!')
           return false

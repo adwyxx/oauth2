@@ -1,10 +1,8 @@
 'use strict'
 /* 权限认证服务，认证用户是否登录，以及获取token和刷新token功能 */
-import Vue from 'vue'
 import VueCookies from 'vue-cookies'
 import AppConfig from '@/app-config'
 import http from '@/utils/http'
-Vue.use(http)
 
 const COOKIES_KEY_TOKEN = 'access_token'
 const AuthService = {
@@ -16,7 +14,7 @@ const AuthService = {
       client_id: AppConfig.clientId,
       client_secret: AppConfig.clientSecret
     }
-    Vue.$get(AppConfig.tokenUrl, params).then(response => {
+    http.get(AppConfig.tokenUrl, params).then(response => {
       if (response.status === 200 && response.data !== null) {
         VueCookies.set(COOKIES_KEY_TOKEN, response.data)
         console.log(VueCookies.get(COOKIES_KEY_TOKEN))

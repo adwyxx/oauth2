@@ -1,7 +1,9 @@
 package com.adwyxx.oauth.config;
 
+import com.adwyxx.oauth.service.impl.AccessTokenService;
 import com.adwyxx.oauth.service.impl.AuthClientDetailsService;
 import com.adwyxx.oauth.service.impl.AuthUserDetailsService;
+import com.adwyxx.oauth.service.impl.RedisAuthorizationCodeServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +16,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
@@ -43,6 +47,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private AuthClientDetailsService clientDetailsService;
 
+    @Autowired
+    private RedisAuthorizationCodeServices authorizationCodeService;
+
+//    @Autowired
+//    private AccessTokenService accessTokenService;
+
     /**
      * @description : 配置AccessToken的存储方式：RedisTokenStore存储。
      * Spring Cloud Security OAuth2通过DefaultTokenServices类来完成token生成、过期等 OAuth2 标准规定的业务逻辑，
@@ -58,6 +68,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     {
         RedisTokenStore store = new RedisTokenStore(redisConnectionFactory);
         return store;
+    }
+
+    @Bean
+    public AccessTokenService accessTokenService()
+    {
+        return new AccessTokenService(tokenStore,clientDetailsService);
     }
 
     /**
@@ -90,9 +106,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         // 设置
         endpoints.authenticationManager(authenticationManager)
                 .tokenStore(tokenStore)
+                .tokenServices(accessTokenService()) //设置token操作服务类
                 .redirectResolver(new AuthRedirectResolver()) //授权码请求跳转地址验证
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST) //支持GET\POS请求获取token
-                //.authorizationCodeServices(authorizationCodeService) //不设置的话默认内存存储authorizationCode
+                .authorizationCodeServices(authorizationCodeService) //设置authorizationCodeService使用Redis存储
                 .userDetailsService(userDetailsService)
                 .reuseRefreshTokens(true); //开启刷新token模式
 

@@ -44,7 +44,7 @@ public class RedisHelper {
     * @author : Leo.W
     * @date : 2018/11/29 14:57
     **/
-    public static void setValue(Object key,Object value)
+    public static void set(Object key,Object value)
     {
         getTemplate().opsForValue().set(key,value);
     }
@@ -56,7 +56,7 @@ public class RedisHelper {
     * @date : 2018/11/29 14:58
     * @return : Value
     **/
-    public static Object getValue(Object key)
+    public static Object get(Object key)
     {
        return getTemplate().opsForValue().get(key);
     }
@@ -67,7 +67,7 @@ public class RedisHelper {
     * @author : Leo.W
     * @date : 2018/11/29 14:59
     **/
-    public  static void delete(Object key)
+    public  static void remove(Object key)
     {
         getTemplate().delete(key);
     }

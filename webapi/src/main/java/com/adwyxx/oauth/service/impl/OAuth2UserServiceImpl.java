@@ -3,6 +3,7 @@ package com.adwyxx.oauth.service.impl;
 import com.adwyxx.oauth.model.OAuthUser;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -15,7 +16,9 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         String uri = oAuth2UserRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUri();
-        String tokenValue = oAuth2UserRequest.getAccessToken().getTokenValue();
+        OAuth2AccessToken token = oAuth2UserRequest.getAccessToken();
+        String tokenValue = token.getTokenValue();
+
         uri = uri + "?access_token=" + tokenValue;
 
         OAuthUser user = new OAuthUser();
