@@ -16,11 +16,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
-
 import javax.sql.DataSource;
 
 /**
@@ -49,6 +46,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Autowired
     private RedisAuthorizationCodeServices authorizationCodeService;
+
 
 //    @Autowired
 //    private AccessTokenService accessTokenService;
@@ -111,6 +109,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST) //支持GET\POS请求获取token
                 .authorizationCodeServices(authorizationCodeService) //设置authorizationCodeService使用Redis存储
                 .userDetailsService(userDetailsService)
+
                 .reuseRefreshTokens(true); //开启刷新token模式
 
         // 设置替代系统默认的请求路径，第一个参数为系统默认路径，第二个参数为替代后的路径

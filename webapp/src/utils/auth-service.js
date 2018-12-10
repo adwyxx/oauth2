@@ -7,7 +7,7 @@ import http from '@/utils/http'
 const COOKIES_KEY_TOKEN = 'access_token'
 const AuthService = {
   name: 'auth-service',
-  login (username, password) {
+  login (username, password, redirctUrl) {
     var params = {username: username,
       password: password,
       grant_type: AppConfig.authorizedGrantType,
@@ -18,7 +18,9 @@ const AuthService = {
       if (response.status === 200 && response.data !== null) {
         VueCookies.set(COOKIES_KEY_TOKEN, response.data)
         console.log(VueCookies.get(COOKIES_KEY_TOKEN))
-        // window.location.href = 'https:/www.baidu.com'
+        if (redirctUrl) {
+          window.location.href = redirctUrl
+        }
       } else {
         console.log(response)
       }

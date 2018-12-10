@@ -39,6 +39,11 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthUserDetailsService userDetailsService;
 
+    @Autowired
+    private OAuth2AuthenticationEntryPoint authenticationEntryPoint;
+    @Autowired
+    private OAuth2AuthorizeRequestResolver authorizeRequestResolver;
+
     // 配置AuthenticationManager实现类，解决AuthenticationManager不能自动注解问题
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     @Override
@@ -72,10 +77,21 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         return new DefautlCorsFilter();
     }
 
+    // 配置密码加密方式
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    // authorization code跳转至登陆页面前设置
+    @Bean
+    public OAuth2AuthenticationEntryPoint oAuth2AuthenticationEntryPoint() {
+        return new OAuth2AuthenticationEntryPoint(this.loginPage);
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        System.out.print(this.loginPage);
         //设置拦截的oauth资源
         http.authorizeRequests()
                 .antMatchers("/oauth/**","/login/**").authenticated() //设置需要权限认证的路径
@@ -84,9 +100,18 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
             //.and()
             //.formLogin() //form表单登陆方式页面设置
             //    .permitAll() //form表单登陆页面受保护
+            .and().exceptionHandling().authenticationEntryPoint(oAuth2AuthenticationEntryPoint()) //authorization code获取跳转至登陆页面设置
+            //.and().oauth2Client().authorizationCodeGrant()
             .and().oauth2Login()//oauth2登陆方式配置项
+                .authorizationEndpoint()
+                //.authorizationRequestResolver() //处理oauth2 authorization code请求的代理类设置
+                //.authorizationRequestRepository()
+                //.baseUri("") //获取Authorization code的api地址，默认为/oauth2/authorization
+                .authorizationRequestResolver(authorizeRequestResolver)
+                .and()
                 .successHandler(new AuthenticationSuccessHandler()) //支持前后端分离，验证成功后跳转配置
                 .loginPage(this.loginPage) //oauth2登陆页面
+
                 .userInfoEndpoint().userService(new OAuth2UserServiceImpl());
 
         http.addFilterBefore(defautlCorsFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -95,11 +120,6 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.cors()
             .and()
             .csrf().disable();
-}
-
-    // 配置密码加密方式
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
     }
+
 }
