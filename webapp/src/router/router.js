@@ -36,7 +36,7 @@ router.beforeEach((to, from, next) => {
   // 叛段是否需要登录验证
   if (to.meta.requireAuth) {
     // 判断是否已经登录，如果登录则直接跳转到下个路由地址，否则跳转到登录页面
-    if (AuthService.isAuthorized()) {
+    if (Vue.isAuthorized()) {
       next()
     } else {
       next({

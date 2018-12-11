@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import AuhtService from '@/utils/auth-service'
 
 export default {
   name: 'Login',
@@ -41,7 +40,7 @@ export default {
     login () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          AuhtService.login(this.formData.username, this.formData.password)
+          this.login(this.formData.username, this.formData.password)
         } else {
           console.log('error submit!!')
           return false

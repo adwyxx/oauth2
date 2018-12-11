@@ -1,8 +1,7 @@
 package com.adwyxx.oauth.config;
 
 import com.adwyxx.oauth.handler.AuthenticationSuccessHandler;
-import com.adwyxx.oauth.service.impl.AuthUserDetailsService;
-import com.adwyxx.oauth.service.impl.OAuth2UserServiceImpl;
+import com.adwyxx.oauth.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -43,6 +42,10 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     private OAuth2AuthenticationEntryPoint authenticationEntryPoint;
     @Autowired
     private OAuth2AuthorizeRequestResolver authorizeRequestResolver;
+    @Autowired
+    private OAuth2ClientRepository oAuth2ClientRepository;
+    @Autowired
+    private OAuth2ClientService oAuth2ClientService;
 
     // 配置AuthenticationManager实现类，解决AuthenticationManager不能自动注解问题
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
@@ -92,6 +95,12 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        //允许跨域
+        http.cors()
+                .and()
+                .csrf().disable();
+        http.addFilterBefore(defautlCorsFilter(), UsernamePasswordAuthenticationFilter.class);
+
         //设置拦截的oauth资源
         http.authorizeRequests()
                 .antMatchers("/oauth/**","/login/**").authenticated() //设置需要权限认证的路径
@@ -100,26 +109,25 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
             //.and()
             //.formLogin() //form表单登陆方式页面设置
             //    .permitAll() //form表单登陆页面受保护
-            .and().exceptionHandling().authenticationEntryPoint(oAuth2AuthenticationEntryPoint()) //authorization code获取跳转至登陆页面设置
-            //.and().oauth2Client().authorizationCodeGrant()
+            .and().exceptionHandling()
+                .authenticationEntryPoint(oAuth2AuthenticationEntryPoint()) //authorization code获取跳转至登陆页面设置
+            .and()
+            .oauth2Client()
+                .authorizedClientRepository(oAuth2ClientRepository)
+                .authorizedClientService(oAuth2ClientService)
+                .authorizationCodeGrant()
+                .and()
+                //.clientRegistrationRepository()
             .and().oauth2Login()//oauth2登陆方式配置项
                 .authorizationEndpoint()
                 //.authorizationRequestResolver() //处理oauth2 authorization code请求的代理类设置
                 //.authorizationRequestRepository()
                 //.baseUri("") //获取Authorization code的api地址，默认为/oauth2/authorization
-                .authorizationRequestResolver(authorizeRequestResolver)
+                //.authorizationRequestResolver(authorizeRequestResolver)
                 .and()
                 .successHandler(new AuthenticationSuccessHandler()) //支持前后端分离，验证成功后跳转配置
                 .loginPage(this.loginPage) //oauth2登陆页面
-
                 .userInfoEndpoint().userService(new OAuth2UserServiceImpl());
-
-        http.addFilterBefore(defautlCorsFilter(), UsernamePasswordAuthenticationFilter.class);
-
-        //允许跨域
-        http.cors()
-            .and()
-            .csrf().disable();
     }
 
 }

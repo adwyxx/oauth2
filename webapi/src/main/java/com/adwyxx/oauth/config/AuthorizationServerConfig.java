@@ -109,7 +109,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST) //支持GET\POS请求获取token
                 .authorizationCodeServices(authorizationCodeService) //设置authorizationCodeService使用Redis存储
                 .userDetailsService(userDetailsService)
-
                 .reuseRefreshTokens(true); //开启刷新token模式
 
         // 设置替代系统默认的请求路径，第一个参数为系统默认路径，第二个参数为替代后的路径

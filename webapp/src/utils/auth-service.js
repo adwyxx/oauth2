@@ -4,10 +4,12 @@ import VueCookies from 'vue-cookies'
 import AppConfig from '@/app-config'
 import http from '@/utils/http'
 
-const COOKIES_KEY_TOKEN = 'access_token'
-const AuthService = {
-  name: 'auth-service',
-  login (username, password, redirctUrl) {
+const AuthService = {}
+
+AuthService.install = function (Vue, options) {
+  let COOKIES_KEY_TOKEN = 'access_token'
+  // 登录
+  Vue.propotype.login = function (username, password, redirctUrl) {
     var params = {username: username,
       password: password,
       grant_type: AppConfig.authorizedGrantType,
@@ -25,26 +27,24 @@ const AuthService = {
         console.log(response)
       }
     })
-  },
+  }
   // 验证是否登录
-  isAuthorized () {
+  Vue.propotype.isAuthorized = function () {
     var token = this.getAccessToken()
     if (token === null) {
       return false
     }
-
     return true
-  },
+  }
   // 获取token信息
-  getAccessToken () {
+  Vue.propotype.getAccessToken = function () {
     if (VueCookies.isKey(COOKIES_KEY_TOKEN)) {
       return VueCookies.get(COOKIES_KEY_TOKEN)
     }
     return null
-  },
+  }
   // 刷新token
-  refreshToken () {
-
+  Vue.propotype.refreshToken = function () {
   }
 }
 
