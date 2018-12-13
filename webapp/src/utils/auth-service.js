@@ -6,17 +6,17 @@ import http from '@/utils/http'
 
 const AuthService = {}
 
-AuthService.install = function (Vue, options) {
+AuthService.install = function (Vue) {
   let COOKIES_KEY_TOKEN = 'access_token'
   // 登录
-  Vue.propotype.login = function (username, password, redirctUrl) {
+  Vue.prototype.$login = function (username, password, redirctUrl) {
     var params = {username: username,
       password: password,
       grant_type: AppConfig.authorizedGrantType,
       client_id: AppConfig.clientId,
       client_secret: AppConfig.clientSecret
     }
-    http.get(AppConfig.tokenUrl, params).then(response => {
+    return http.get(AppConfig.tokenUrl, params).then(response => {
       if (response.status === 200 && response.data !== null) {
         VueCookies.set(COOKIES_KEY_TOKEN, response.data)
         console.log(VueCookies.get(COOKIES_KEY_TOKEN))
@@ -29,7 +29,7 @@ AuthService.install = function (Vue, options) {
     })
   }
   // 验证是否登录
-  Vue.propotype.isAuthorized = function () {
+  Vue.prototype.$isAuthorized = function () {
     var token = this.getAccessToken()
     if (token === null) {
       return false
@@ -37,14 +37,14 @@ AuthService.install = function (Vue, options) {
     return true
   }
   // 获取token信息
-  Vue.propotype.getAccessToken = function () {
+  Vue.prototype.$getAccessToken = function () {
     if (VueCookies.isKey(COOKIES_KEY_TOKEN)) {
       return VueCookies.get(COOKIES_KEY_TOKEN)
     }
     return null
   }
   // 刷新token
-  Vue.propotype.refreshToken = function () {
+  Vue.prototype.$refreshToken = function () {
   }
 }
 

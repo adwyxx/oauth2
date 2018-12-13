@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/pages/Login'
+import Error from '@/pages/Error'
 import AuthService from '@/utils/auth-service'
 
 Vue.use(Router)
@@ -21,7 +22,9 @@ const routes = [
     name: 'Error',
     component: Error,
     mete: {
-      requireAuth: false
+      requireAuth: false,
+      message: '',
+      details: ''
     }
   }
 ]
@@ -36,7 +39,7 @@ router.beforeEach((to, from, next) => {
   // 叛段是否需要登录验证
   if (to.meta.requireAuth) {
     // 判断是否已经登录，如果登录则直接跳转到下个路由地址，否则跳转到登录页面
-    if (Vue.isAuthorized()) {
+    if (Vue.$isAuthorized()) {
       next()
     } else {
       next({

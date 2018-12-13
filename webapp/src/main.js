@@ -3,10 +3,12 @@
 import Vue from 'vue'
 import App from './App'
 import router from '@/router/router'
-import http from '@/utils/http'
-import AuhtService from '@/utils/auth-service'
+import AuthService from '@/utils/auth-service'
+import Http from '@/utils/http'
+import ErrorHandler from '@/utils/error-handler'
+
 import 'element-ui/lib/theme-chalk/index.css' /* 引入全局element-ui样式 */
-import {Button, Input, Form, FormItem, Card, Loading, Dialog, Alert} from 'element-ui'
+import {Button, Input, Form, FormItem, Card, Loading, Dialog, Alert, Row, Col, Collapse, CollapseItem} from 'element-ui'
 Vue.use(Button)
 Vue.use(Input)
 Vue.use(Form)
@@ -15,9 +17,14 @@ Vue.use(Card)
 Vue.use(Loading)
 Vue.use(Dialog)
 Vue.use(Alert)
-Vue.use(AuhtService)
-Vue.prototype.$get = http.get
-Vue.prototype.$post = http.post
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Collapse)
+Vue.use(CollapseItem)
+Vue.use(AuthService)
+Vue.use(ErrorHandler)
+Vue.prototype.$get = Http.get
+Vue.prototype.$post = Http.post
 
 Vue.config.productionTip = false
 

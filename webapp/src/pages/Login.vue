@@ -10,7 +10,7 @@
           <el-form-item label="密码" prop="password">
           <el-input type="password" placeholder="请输入密码" v-model="formData.password"></el-input>
           </el-form-item>
-          <el-form-item>
+          <el-form-item style="text-align:left">
           <el-button type="primary" @click="login()">登陆</el-button>
           <el-button @click="reset()">重置</el-button>
           </el-form-item>
@@ -40,7 +40,11 @@ export default {
     login () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          this.login(this.formData.username, this.formData.password)
+          this.$login(this.formData.username, this.formData.password).then(response => {
+            console.log('login seccussfull!')
+          }, (error) => {
+            this.$thows(error)
+          })
         } else {
           console.log('error submit!!')
           return false

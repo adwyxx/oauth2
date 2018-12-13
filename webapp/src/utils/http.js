@@ -1,11 +1,9 @@
 'use strict'
 /* 封装Axios,处理http请求 */
-import Vue from 'vue'
 import Axios from 'axios'
 import qs from 'qs'
 import AppConfig from '@/app-config'
-import AuhtService from '@/utils/auth-service'
-Vue.use(AuhtService)
+import VueCookies from 'vue-cookies'
 
 /* http请求webapi前缀设置 */
 Axios.defaults.baseURL = AppConfig.apiBaseUrl
@@ -15,8 +13,11 @@ Axios.interceptors.request.use(config => {
   // if (config.method.toLocaleLowerCase() === 'post' || config.method.toLocaleLowerCase() === 'put' || config.method.toLocaleLowerCase() === 'delete') {
   //   config.data = qs.stringify(config.data)
   // }
-  if (Vue.isAuthorized()) {
-    var token = AuhtService.getAccessToken()
+  let token = null
+  if (VueCookies.isKey('access_token')) {
+    token = VueCookies.get('access_token')
+  }
+  if (token !== null && token !== undefined) {
     config.headers.Authorization = token.token_type + ' ' + token.access_token
   }
   return config
@@ -34,7 +35,7 @@ Axios.interceptors.response.use(response => {
   return response
 }, error => {
   console.log(error)
-  return Promise.reject(error.response)
+  return Promise.reject(error)
 })
 
 const http = {
