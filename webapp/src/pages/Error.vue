@@ -42,7 +42,7 @@
 <script>
 export default {
   name: 'Error',
-  data() {
+  data () {
     return {
       status: 404,
       message: '哎呀，网页出错了',
@@ -50,7 +50,7 @@ export default {
       imagePath: './static/images/404.gif'
     }
   },
-  created() {
+  created () {
     if (this.$route.params) {
       this.message = this.$route.params.message
       this.stack = this.$route.params.stack
